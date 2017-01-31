@@ -53,7 +53,7 @@ export default function appStateReducer(state = initialState.appState, action) {
                     from: data.from,
                     to: data.to,
                     color: "red",
-                    label: "Unresponsive"
+                    label: data.label || "Unresponsive"
                 })
             }); 
 
