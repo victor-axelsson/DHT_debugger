@@ -6,6 +6,7 @@ import { getRoute } from './router'
 import { CONSTANTS } from '../core/constants'
 import { ENV } from 'core/env'
 import Graph from 'react-graph-vis'
+import MainGraph from './home/MainGraph'
 
 const store = createStore(MyApp);
 if (!ENV.DEV) {
@@ -28,8 +29,7 @@ export default class App extends React.Component {
 
     _getInitialState() {
         //let storeState = store.getState();
-
-
+        /*
         var data = {
             nodes: [
               {id: 1, label: 'Node 1'},
@@ -45,8 +45,9 @@ export default class App extends React.Component {
               {from: 2, to: 5}
             ]
         };
+        */
 
-
+        /*
         var that = this; 
         setInterval(() => {
             var d = that.state.graphData; 
@@ -54,27 +55,26 @@ export default class App extends React.Component {
                 id: d.nodes.length + 1 , 
                 label : "Node "  + d.nodes.length +1
             })
-
-            /*
+            
             that.setState({
                 graphData: d
             }); 
-            */
-
+            
         }, 1000); 
+        */
 
-        return {
-            graphData: data
-        };
+        return {};
     }
 
     setupListeners(){
         __socket.on('probe', (data) => {
-            console.log(data); 
+            store.dispatch({
+                type: CONSTANTS.GOT_PROBE,
+                payload: data
+            }); 
         }); 
 
         setTimeout(function(){
-            console.log("asdasd"); 
             __socket.emit("leave", JSON.stringify({id: 22}),function(data){
                 console.log(data);
                 console.log("CB");  
@@ -97,7 +97,7 @@ export default class App extends React.Component {
         return (
             <Provider store={ store }>
                 <div>
-                    <Graph graph={this.state.graphData}/>
+                    <MainGraph />
                 </div>
             </Provider>
             );

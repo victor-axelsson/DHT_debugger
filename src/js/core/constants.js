@@ -1,3 +1,3 @@
 export const CONSTANTS = {
-    FOOTER_HEIGHT: 200
+    GOT_PROBE: 'GOT_PROBE'
 }
