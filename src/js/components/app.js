@@ -5,6 +5,7 @@ import MyApp from '../core/reducers'
 import { getRoute } from './router'
 import { CONSTANTS } from '../core/constants'
 import { ENV } from 'core/env'
+import Graph from 'react-graph-vis'
 
 const store = createStore(MyApp);
 if (!ENV.DEV) {
@@ -27,7 +28,58 @@ export default class App extends React.Component {
 
     _getInitialState() {
         //let storeState = store.getState();
-        return {};
+
+
+        var data = {
+            nodes: [
+              {id: 1, label: 'Node 1'},
+              {id: 2, label: 'Node 2'},
+              {id: 3, label: 'Node 3'},
+              {id: 4, label: 'Node 4'},
+              {id: 5, label: 'Node 5'}
+            ],
+            edges: [
+              {from: 1, to: 2},
+              {from: 1, to: 3},
+              {from: 2, to: 4},
+              {from: 2, to: 5}
+            ]
+        };
+
+
+        var that = this; 
+        setInterval(() => {
+            var d = that.state.graphData; 
+            d.nodes.push({
+                id: d.nodes.length + 1 , 
+                label : "Node "  + d.nodes.length +1
+            })
+
+            /*
+            that.setState({
+                graphData: d
+            }); 
+            */
+
+        }, 1000); 
+
+        return {
+            graphData: data
+        };
+    }
+
+    setupListeners(){
+        __socket.on('probe', (data) => {
+            console.log(data); 
+        }); 
+
+        setTimeout(function(){
+            console.log("asdasd"); 
+            __socket.emit("leave", JSON.stringify({id: 22}),function(data){
+                console.log(data);
+                console.log("CB");  
+            }); 
+        }, 2000); 
     }
 
     componentWillUnmount() {
@@ -36,14 +88,16 @@ export default class App extends React.Component {
             this.unsubscribe = null;
         }
     }
-    
-    componentDidMount() {}
+
+    componentDidMount() {
+        this.setupListeners(); 
+    }
 
     render() {
         return (
             <Provider store={ store }>
                 <div>
-                    <p>The app</p>
+                    <Graph graph={this.state.graphData}/>
                 </div>
             </Provider>
             );
