@@ -68,12 +68,20 @@ export default class App extends React.Component {
 
     setupListeners(){
         __socket.on('probe', (data) => {
+            console.log(data); 
             store.dispatch({
                 type: CONSTANTS.GOT_PROBE,
                 payload: data
             }); 
         }); 
 
+        __socket.on('unresponsive', (data) => {
+            store.dispatch({
+                type: CONSTANTS.UNRESONSIVE_NODE,
+                payload: data
+            }); 
+        }); 
+        
         setTimeout(function(){
             __socket.emit("leave", JSON.stringify({id: 22}),function(data){
                 console.log(data);

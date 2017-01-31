@@ -5,6 +5,9 @@ export default function appStateReducer(state = initialState.appState, action) {
     switch (action.type) {
 
         case CONSTANTS.GOT_PROBE: 
+            if(state.messages['probe'] == action.payload){
+                return state; 
+            }
             var edges = []; 
             var previousNode = null; 
             var nodes = JSON.parse(action.payload).nodes.map((item, i) => {
@@ -12,12 +15,6 @@ export default function appStateReducer(state = initialState.appState, action) {
                     id: item.id,
                     label: item.ip + ":" + item.port
                 }; 
-
-                /*
-                if(i == 2){
-                    node.level = 3; 
-                }
-                */
 
                 if(i > 0){
                     edges.push({
@@ -40,6 +37,24 @@ export default function appStateReducer(state = initialState.appState, action) {
             var newState = Object.assign({}, state, {
                 nodes: nodes,
                 edges: edges
+            }); 
+            newState.messages['probe'] = action.payload; 
+
+            return newState; 
+
+
+        case CONSTANTS.UNRESONSIVE_NODE: 
+
+            console.log(action.payload)
+            var data = JSON.parse(action.payload); 
+            console.log(data); 
+            var newState = Object.assign({}, state, {
+                edges: state.edges.concat({
+                    from: data.from,
+                    to: data.to,
+                    color: "red",
+                    label: "Unresponsive"
+                })
             }); 
 
             return newState; 
