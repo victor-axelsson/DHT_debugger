@@ -12,7 +12,8 @@ export const initialState = {
         },
         messages : {
             probe: null
-        }
+        },
+        connected: false
     },
     navigation: {}
 };

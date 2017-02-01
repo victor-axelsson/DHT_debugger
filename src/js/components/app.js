@@ -7,6 +7,7 @@ import { CONSTANTS } from '../core/constants'
 import { ENV } from 'core/env'
 import Graph from 'react-graph-vis'
 import MainGraph from './home/MainGraph'
+import Connected from './home/connected'
 
 const store = createStore(MyApp);
 if (!ENV.DEV) {
@@ -82,12 +83,21 @@ export default class App extends React.Component {
             }); 
         }); 
         
-        setTimeout(function(){
-            __socket.emit("leave", JSON.stringify({id: 22}),function(data){
-                console.log(data);
-                console.log("CB");  
+        __socket.on('connect', () => {
+            store.dispatch({
+                type: CONSTANTS.CONECTIVITY, 
+                payload: true
             }); 
-        }, 2000); 
+        }); 
+
+        __socket.on('disconnect', () => {
+            store.dispatch({
+                type: CONSTANTS.CONECTIVITY, 
+                payload: false
+            }); 
+        }); 
+
+
     }
 
     componentWillUnmount() {
@@ -99,12 +109,18 @@ export default class App extends React.Component {
 
     componentDidMount() {
         this.setupListeners(); 
+
+        store.dispatch({
+            type: CONSTANTS.CONECTIVITY, 
+            payload: __socket.connected
+        }); 
     }
 
     render() {
         return (
             <Provider store={ store }>
                 <div>
+                    <Connected />
                     <MainGraph />
                 </div>
             </Provider>

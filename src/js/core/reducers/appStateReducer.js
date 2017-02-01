@@ -4,6 +4,12 @@ import { initialState } from '../initialState'
 export default function appStateReducer(state = initialState.appState, action) {
     switch (action.type) {
 
+        case CONSTANTS.CONECTIVITY: 
+            var newState = Object.assign({}, state, {
+                connected: action.payload
+            }); 
+            return newState; 
+
         case CONSTANTS.GOT_PROBE: 
             if(state.messages['probe'] == action.payload){
                 return state; 
